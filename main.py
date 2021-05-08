@@ -1,8 +1,17 @@
-##written by lucas and eduardo arndt 
+# eduardo arndt e lucas schuler
+
 import re
+import sys
+import os
 from keywords import keywords
+from datetime import datetime
 
 blank_char ="[ \n]+" #"[\\(\\):, ]+"
+
+if os.path.exists("result.txt"):
+  os.remove("result.txt")
+
+result_file = open("result.txt", "a")
 
 tokens = {
     "keywords":keywords,
@@ -11,9 +20,9 @@ tokens = {
     "operadores":"[+*\\-/]",
     "separadores":"[;\\{\\}.]",
     "identificador":"[a-zA-Z0-9_]+",
-    "atribuição":"=",
+    "atribuicao":"=",
     "teste":"==",
-    "ignore":"[(),\\[\\]:]+"
+    "ignorados":"[(),\\[\\]:]+"
 }
 
 def remove_ignored_chars(input):
@@ -50,7 +59,10 @@ def extract_tokens_from_line(line, linePos):
             if tokenClass:
                 lexema = text[0:posSubstr]
                 if tokenClass != "ignore":
-                    print("Linha : {} classe: {} lexema: {} \n".format(linePos, tokenClass, lexema )) 
+                    content = "Linha : {} classe: {} lexema: {} \n".format(linePos, tokenClass, lexema )
+                    result_file.write(content)
+                    print(content) 
+                
                 text_len = len(text)
                 text = text[posSubstr: text_len]
 
@@ -68,4 +80,5 @@ count = 0
 for line in lines:
      count += 1
      extract_tokens_from_line(line, count)
-     
+
+result_file.close()
